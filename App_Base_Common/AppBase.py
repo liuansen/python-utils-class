@@ -3,6 +3,10 @@ from __future__ import unicode_literals
 
 import sys
 from argparse import ArgumentParser
+from functools import wraps
+from raven import Client
+from settings import SENTRY_URL
+from log import get_logger
 
 
 class AppBase(object):
@@ -54,3 +58,26 @@ class AppBase(object):
         """
         pass
 
+
+def get_sentry_client():
+    client = Client(SENTRY_URL)
+    return client
+
+
+def try_except(log_name=None):
+    def decorator_try(func):
+        @wraps(func)
+        def exception_handle(*args, **kwargs):
+            try:
+                return func(*args, **kwargs)
+            except Exception as e:
+                log = get_logger(log_name)
+                log.error(e, exc_info=True)
+                client = get_sentry_client()
+                client.captureException()
+            finally:
+                pass
+
+        return exception_handle
+
+    return decorator_try

@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 
 import sys
 
-from AppBase import AppBase
+from AppBase import AppBase, try_except
 
 
 class Example(AppBase):
@@ -21,6 +21,7 @@ class Example(AppBase):
             type=int
         )
 
+    @try_except("for_example")
     def handle(self, options):
         example = options.get('example')
         print example
