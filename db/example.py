@@ -3,8 +3,8 @@
 from __future__ import unicode_literals
 
 
-from mysql.base import Db
-from redis.base import RedisPool
+from base_mysql.base import Db
+from base_redis.base import RedisPool
 
 
 db = Db()
