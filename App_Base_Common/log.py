@@ -53,7 +53,7 @@ def logger_to_file(logger, log_file_prefix, log_file_max_size, log_file_num_back
 def get_logger(log_name, level=logging.DEBUG):
     LOG = logging.getLogger(log_name)
     LOG.setLevel(level)
-    log_path = settings.LOG_PATH
+    log_path = LOG_PATH
     file_path = os.path.join(log_path, '%s.log'%(log_name))
     if not os.path.exists(os.path.dirname(file_path)):
         os.makedirs(os.path.dirname(file_path))
