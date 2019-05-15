@@ -44,7 +44,7 @@ class ExampleDbBase(AppBase):
         sql = '''
         select * from accounts_user 
         '''
-        s = self.mysql_conn.execute(text(sql=1))
+        s = self.mysql_conn.execute(text(sql))
         for ss in s:
             print ss
 
