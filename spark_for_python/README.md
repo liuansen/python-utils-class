@@ -40,3 +40,10 @@ Welcome to spark_for_python!
         #运行python命令行
         import pyspark
         #没有报错则成功安装
+        
+**项目运行**
+- 启动程序
+   1. python manage.py runserver 0.0.0.0:8000
+   2. 登录：http://127.0.0.1:8000/spark/login/?&app_name=spark_web2
+   3. 执行：http://127.0.0.1:8000/spark/execute/
+    
