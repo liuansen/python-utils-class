@@ -102,7 +102,7 @@ def get_file_path(path, week_of, table1, table2, first_date, today, worksheet, s
                         # 本周工作内容
                         table1.rows[nums].cells[1].add_paragraph(line[d])
                         s1 = s1 + ' ' + line[d]
-                    if line[d] == '下周工作':
+                    if line[d] == '下周工作' or line[d] == '下周计划':
                         trade_today = False
                         yearst_today = True
                         d += 1
@@ -307,15 +307,15 @@ def main():
     site_1 = 4
     site_2 = 71
     today = date.today().strftime("%Y-%m-%d")
-    first_date = (date.today() + timedelta(days=-5)).strftime("%Y-%m-%d")
+    first_date = (date.today() + timedelta(days=-4)).strftime("%Y-%m-%d")
     end_date = (date.today() + timedelta(days=2)).strftime("%Y-%m-%d")
     # 生成excel表格
     workbook = xlwt.Workbook()
     worksheet = workbook.add_sheet('周报', cell_overwrite_ok=True)
     to_excel(worksheet, first_date, end_date)
     # 获取第几周
-    # week = get_week_of_month(date.today().year, date.today().month, date.today().day)
-    week = get_week_of_month(2019, 7, 26)
+    week = get_week_of_month(date.today().year, date.today().month, date.today().day)
+    # week = get_week_of_month(2019, 7, 26)
     document = Document()
     document.add_heading('项目周报（{0}）'.format(week.strip('#').strip()), level=1)
     document.add_paragraph('填表人：廖虹媛    报告周期：{date1}到{date2}   填表日期：{date3}'.format(
