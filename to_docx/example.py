@@ -13,7 +13,7 @@ import xlwt
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-md_path = 'D:/Python/Project/project/python-utils-class/to_docx/doc'
+md_path = '/Users/liuansen/Desktop/work/project/python-utils-class/to_docx/doc'
 
 
 def get_file_path(path, week_of, table1, table2, first_date, today, worksheet, site_1, site_2):
