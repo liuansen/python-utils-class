@@ -4,19 +4,21 @@ from __future__ import unicode_literals
 
 import os
 import sys
+import re
 from datetime import date, datetime, timedelta
 
 from docx import Document
 import xlwt
 
+from settings import MD_PATH, SITE_1, SITE_2, CELL
+
 
 reload(sys)
 sys.setdefaultencoding('utf-8')
 
-md_path = '/Users/liuansen/Desktop/work/project/python-utils-class/to_docx/doc'
 
-
-def get_file_path(path, week_of, table1, table2, first_date, today, worksheet, site_1, site_2):
+def get_file_path(path, week_of, table1, table2, first_date, today, worksheet, site_1, site_2,
+                  first_date_of, today_of):
     style = xlwt.XFStyle()
     bl = xlwt.Borders()
     bl.left = xlwt.Borders.THIN
@@ -33,6 +35,7 @@ def get_file_path(path, week_of, table1, table2, first_date, today, worksheet, s
     file_date = date.today().strftime('%Y-%m')
     for filename in os.listdir(path):
         file_path = os.path.join(path, filename)
+        group_name = re.findall(r'.*2019-08-(.*)..*', filename)[0][0:-2]
         fd = filename[:7]
         md = file_path[-2:]
         if md == 'md':
@@ -40,9 +43,14 @@ def get_file_path(path, week_of, table1, table2, first_date, today, worksheet, s
                 with open(file_path) as f:
                     lines = f.readlines()
                 lines = [i.strip('-').strip() for i in lines]
-                for key, value in enumerate(lines):
-                    if value == week_of:
-                        first_index = key
+                if len(lines) == 0:
+                    first_index = 0
+                else:
+                    for key, value in enumerate(lines):
+                        if value == week_of:
+                            first_index = key
+                        else:
+                            first_index = 0
                 k = 0
                 line_list = []
                 index = 0
@@ -82,17 +90,19 @@ def get_file_path(path, week_of, table1, table2, first_date, today, worksheet, s
                         worksheet.write(site_1, 4, today, style)
                         worksheet.write(site_1, 5, name, style)
                         worksheet.write(site_2, 1, str(nums), style)
-                        worksheet.write(site_2, 3, first_date, style)
-                        worksheet.write(site_2, 4, today, style)
+                        worksheet.write(site_2, 3, first_date_of, style)
+                        worksheet.write(site_2, 4, today_of, style)
                         worksheet.write(site_2, 5, name, style)
                         table1.rows[nums].cells[0].add_paragraph(str(nums))
                         table1.rows[nums].cells[2].add_paragraph(first_date)
                         table1.rows[nums].cells[3].add_paragraph(today)
                         table1.rows[nums].cells[4].add_paragraph(name)
+                        table1.rows[nums].cells[5].add_paragraph(group_name)
                         table2.rows[nums].cells[0].add_paragraph(str(nums))
-                        table2.rows[nums].cells[2].add_paragraph(first_date)
-                        table2.rows[nums].cells[3].add_paragraph(today)
+                        table2.rows[nums].cells[2].add_paragraph(first_date_of)
+                        table2.rows[nums].cells[3].add_paragraph(today_of)
                         table2.rows[nums].cells[4].add_paragraph(name)
+                        table2.rows[nums].cells[5].add_paragraph(group_name)
                         d += 1
                         sor_index += 1
                     if line[d] == '本周工作':
@@ -268,80 +278,87 @@ def to_excel(worksheet, first_date, end_date):
     style.alignment = al
     style.borders = bl
     worksheet.write_merge(0, 3, 0, 9, title_str, style)
-    worksheet.write_merge(4, 70, 0, 0, '一.本周计划进展情况', style)
-    worksheet.write(4, 1, '序号', style)
-    worksheet.write(4, 2, '工作事项名称', style)
-    worksheet.write(4, 3, '开始时间', style)
-    worksheet.write(4, 4, '完成时间', style)
-    worksheet.write(4, 5, '责任人', style)
-    worksheet.write(4, 6, '计划%', style)
-    worksheet.write(4, 7, '实际%', style)
-    worksheet.write(4, 8, '偏差%', style)
-    worksheet.write(4, 9, '进展说明', style)
-    worksheet.write_merge(71, 132, 0, 0, '二.下周工作计划', style)
-    worksheet.write(71, 1, '序号', style)
-    worksheet.write(71, 2, '工作事项名称', style)
-    worksheet.write(71, 3, '开始时间', style)
-    worksheet.write(71, 4, '完成时间', style)
-    worksheet.write(71, 5, '责任人', style)
-    worksheet.write_merge(71, 71, 6, 8, '计划输出结果', style)
-    worksheet.write(71, 9, '说明', style)
-    worksheet.write_merge(133, 142, 0, 0, '三.目前存在的问题以及需要协调解决的事项', style)
-    worksheet.write(133, 1, '序号', style)
-    worksheet.write(133, 2, '问题名称', style)
-    worksheet.write_merge(133, 133, 3, 4, '问题描述', style)
-    worksheet.write(133, 5, '提出日期', style)
-    worksheet.write(133, 6, '提出人团体', style)
-    worksheet.write(133, 7, '解决责任团队', style)
-    worksheet.write(133, 8, '预期解决时间', style)
-    worksheet.write(133, 9, '解决建议方案和计划', style)
-    worksheet.write_merge(143, 147, 0, 0, '四.本周质量管理方面的工作总结', style)
-    worksheet.write(143, 1, '序号', style)
-    worksheet.write_merge(143, 143, 2, 9, '进展说明', style)
-    worksheet.write_merge(148, 152, 0, 0, '五.本周配置管理方面的工作总结', style)
-    worksheet.write(148, 1, '序号', style)
-    worksheet.write_merge(148, 148, 2, 9, '进展说明', style)
+    worksheet.write_merge(SITE_1, SITE_2-1, 0, 0, '一.本周计划进展情况', style)
+    worksheet.write(SITE_1, 1, '序号', style)
+    worksheet.write(SITE_1, 2, '工作事项名称', style)
+    worksheet.write(SITE_1, 3, '开始时间', style)
+    worksheet.write(SITE_1, 4, '完成时间', style)
+    worksheet.write(SITE_1, 5, '责任人', style)
+    worksheet.write(SITE_1, 6, '计划%', style)
+    worksheet.write(SITE_1, 7, '实际%', style)
+    worksheet.write(SITE_1, 8, '偏差%', style)
+    worksheet.write(SITE_1, 9, '进展说明', style)
+    worksheet.write_merge(SITE_2, SITE_2+31, 0, 0, '二.下周工作计划', style)
+    worksheet.write(SITE_2, 1, '序号', style)
+    worksheet.write(SITE_2, 2, '工作事项名称', style)
+    worksheet.write(SITE_2, 3, '开始时间', style)
+    worksheet.write(SITE_2, 4, '完成时间', style)
+    worksheet.write(SITE_2, 5, '责任人', style)
+    worksheet.write_merge(SITE_2, SITE_2, 6, 8, '计划输出结果', style)
+    worksheet.write(SITE_2, 9, '说明', style)
+    worksheet.write_merge(SITE_2+32, SITE_2+41, 0, 0, '三.目前存在的问题以及需要协调解决的事项', style)
+    worksheet.write(SITE_2+32, 1, '序号', style)
+    worksheet.write(SITE_2+32, 2, '问题名称', style)
+    worksheet.write_merge(SITE_2+32, SITE_2+32, 3, 4, '问题描述', style)
+    worksheet.write(SITE_2+32, 5, '提出日期', style)
+    worksheet.write(SITE_2+32, 6, '提出人团体', style)
+    worksheet.write(SITE_2+32, 7, '解决责任团队', style)
+    worksheet.write(SITE_2+32, 8, '预期解决时间', style)
+    worksheet.write(SITE_2+32, 9, '解决建议方案和计划', style)
+    worksheet.write_merge(SITE_2+42, SITE_2+47, 0, 0, '四.本周质量管理方面的工作总结', style)
+    worksheet.write(SITE_2+42, 1, '序号', style)
+    worksheet.write_merge(SITE_2+42, SITE_2+42, 2, 9, '进展说明', style)
+    worksheet.write_merge(SITE_2+48, SITE_2+53, 0, 0, '五.本周配置管理方面的工作总结', style)
+    worksheet.write(SITE_2+48, 1, '序号', style)
+    worksheet.write_merge(SITE_2+48, SITE_2+48, 2, 9, '进展说明', style)
 
 
 def main():
-    site_1 = 4
-    site_2 = 71
-    today = date.today().strftime("%Y-%m-%d")
-    first_date = (date.today() + timedelta(days=-4)).strftime("%Y-%m-%d")
-    end_date = (date.today() + timedelta(days=2)).strftime("%Y-%m-%d")
+    site_1 = SITE_1
+    site_2 = SITE_2
+    time_now = date.today()
+    # time_now = date(2019, 7, 26)
+    today = time_now.strftime("%Y-%m-%d")
+    first_date = (time_now + timedelta(days=-4)).strftime("%Y-%m-%d")
+    end_date = (time_now + timedelta(days=2)).strftime("%Y-%m-%d")
+    first_date_of = (time_now + timedelta(days=3)).strftime("%Y-%m-%d")
+    end_date_of = (time_now + timedelta(days=7)).strftime("%Y-%m-%d")
     # 生成excel表格
     workbook = xlwt.Workbook()
     worksheet = workbook.add_sheet('周报', cell_overwrite_ok=True)
     to_excel(worksheet, first_date, end_date)
     # 获取第几周
-    week = get_week_of_month(date.today().year, date.today().month, date.today().day)
-    # week = get_week_of_month(2019, 7, 26)
+    week = get_week_of_month(time_now.year, time_now.month, time_now.day)
+    # week = get_week_of_month(2019, 8, 2)
     document = Document()
     document.add_heading('项目周报（{0}）'.format(week.strip('#').strip()), level=1)
     document.add_paragraph('填表人：廖虹媛    报告周期：{date1}到{date2}   填表日期：{date3}'.format(
         date1=first_date, date2=end_date, date3=today))
-    # 创建固定列表函数
-    create_fixed_cell(document, first_date, end_date)
+    # # 创建固定列表函数
+    # create_fixed_cell(document, first_date, end_date)
     # 本周工作内容表格
-    table1 = document.add_table(rows=66, cols=5, style='Table Grid')
+    table1 = document.add_table(rows=CELL, cols=6, style='Table Grid')
     table1.rows[0].cells[0].add_paragraph('编号')
     table1.rows[0].cells[1].add_paragraph('本周工作内容')
     table1.rows[0].cells[2].add_paragraph('计划完成时间')
     table1.rows[0].cells[3].add_paragraph('实际完成时间')
     table1.rows[0].cells[4].add_paragraph('负责人')
+    table1.rows[0].cells[5].add_paragraph('项目组')
     # 下周工作内容表格
     create_table_one_cell(document, '项目进展和计划')
     create_table_one_cell(document, '一、下周工作完成情况（ {0}至 {1}） （以下必填）'.format(first_date, end_date))
-    table2 = document.add_table(rows=66, cols=5, style='Table Grid')
+    table2 = document.add_table(rows=CELL, cols=6, style='Table Grid')
     table2.rows[0].cells[0].add_paragraph('编号')
     table2.rows[0].cells[1].add_paragraph('下周工作内容')
     table2.rows[0].cells[2].add_paragraph('计划完成时间')
     table2.rows[0].cells[3].add_paragraph('实际完成时间')
     table2.rows[0].cells[4].add_paragraph('负责人')
+    table2.rows[0].cells[5].add_paragraph('项目组')
     # 主要内容写入
-    get_file_path(md_path, week, table1, table2, first_date, today, worksheet, site_1, site_2)
-    # 后半部函数
-    create_fixed_cell_tow(document)
+    get_file_path(MD_PATH, week, table1, table2, first_date, today, worksheet,
+                  site_1, site_2, first_date_of, end_date_of)
+    # # 后半部函数
+    # create_fixed_cell_tow(document)
     save_name = '厦开项目组周报{0}至{1}.docx'.format(first_date, end_date)
     document.save(save_name)
     excel_name = '新一代核心系统建设项目周报{0}_天用厦开安全项目组.xls'.format(end_date)
