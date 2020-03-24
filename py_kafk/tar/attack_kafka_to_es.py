@@ -12,7 +12,8 @@ import threading
 
 from threading import Timer
 from elasticsearch import helpers
-from pykafka.common import OffsetType
+test1tes
+test1tessfsd
 from elasticsearch import Elasticsearch
 
 reload(sys)
