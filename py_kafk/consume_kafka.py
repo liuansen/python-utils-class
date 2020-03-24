@@ -6,7 +6,7 @@
 '''
 from __future__ import unicode_literals
 
-import kafka
+import pykafka
 
 
 class KafkaReaderThread(object):
