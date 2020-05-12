@@ -11,6 +11,9 @@ import datetime
 import time
 
 
+FILE_PATH = '/home/anson/python/code/python-utils-class/py_kafk/tencent_waf' 
+
+
 class KafkaReaderThread(object):
     def __init__(self, hosts, broker_version, topic, consumer_group):
         self.hosts = hosts
@@ -55,8 +58,8 @@ class KafkaReaderThread(object):
                 for message in consumer:
                     # test modle
                     file_tsName = str(int(time.mktime(time.strptime(datetime.datetime.now().strftime('%Y-%m-%d %H'), '%Y-%m-%d %H')))*1000)
-                    file_path = FILE_PATH + '/' + 'tencent_waf' + file_tsName + '.dat'
-                    with open(filename,'a') as f:
+                    file_paths = FILE_PATH + '/' + 'tencent_waf' + file_tsName + '.dat'
+                    with open(file_paths,'a') as f:
                         f.write(message.value + '\n')
                     print("123456798")
                     print("message_value:", message.value)
@@ -75,7 +78,6 @@ class KafkaReaderThread(object):
 
 
 if __name__ == '__main__':
-    FILE_PATH = '/home/anson/python/code/python-utils-class/py_kafk/tencent_waf' 
     hosts = "192.168.199.132:9092"
     broker_version = '2.3.0'
     topic = "test1"
