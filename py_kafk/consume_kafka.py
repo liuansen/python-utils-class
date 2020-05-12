@@ -8,6 +8,7 @@ from __future__ import unicode_literals
 
 import pykafka
 import datetime
+import time
 
 
 class KafkaReaderThread(object):
