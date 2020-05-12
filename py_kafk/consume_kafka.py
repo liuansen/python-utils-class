@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 '''
 @author: anson
-@file: msg_kafka.py
+@file: consume_kafka.py
 @time: 2020/03/24 15:20
 '''
 from __future__ import unicode_literals
 
 import pykafka
+import time
 
 
 class KafkaReaderThread(object):
@@ -53,7 +54,8 @@ class KafkaReaderThread(object):
                 for message in consumer:
                     # test modle
 
-                    print(message.value, consumer.held_offsets)
+                    print("message_value:", message.value)
+                    print("consumer_held_offsets:", consumer.held_offsets)
 
                     consumer.commit_offsets()
                     # consumer.stop()
@@ -68,11 +70,13 @@ class KafkaReaderThread(object):
 
 
 if __name__ == '__main__':
+    # 获取毫秒时间戳
+    t = time.time()
     hosts = "192.168.199.132:9092"
     broker_version = '2.3.0'
     topic = "test1"
     consumer_group = "consumer_group_police_seemmo"
-
     kafka = KafkaReaderThread(hosts, broker_version, topic, consumer_group)
-    if kafka.client:
-        kafka.fetchmany()
+    while 1:
+        if kafka.client:
+            kafka.fetchmany()
