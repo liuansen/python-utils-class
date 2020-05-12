@@ -53,7 +53,7 @@ class KafkaReaderThread(object):
                 # _offset = consumer.held_offsets()
                 for message in consumer:
                     # test modle
-
+                    print("123456798")
                     print("message_value:", message.value)
                     print("consumer_held_offsets:", consumer.held_offsets)
 
