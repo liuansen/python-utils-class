@@ -7,7 +7,7 @@
 from __future__ import unicode_literals
 
 import pykafka
-import time
+import datetime
 
 
 class KafkaReaderThread(object):
@@ -53,6 +53,10 @@ class KafkaReaderThread(object):
                 # _offset = consumer.held_offsets()
                 for message in consumer:
                     # test modle
+                    file_tsName = str(int(time.mktime(time.strptime(datetime.datetime.now().strftime('%Y-%m-%d %H'), '%Y-%m-%d %H')))*1000)
+                    file_path = FILE_PATH + '/' + 'tencent_waf' + file_tsName + '.dat'
+                    with open(filename,'a') as f:
+                        f.write(message.value + '\n')
                     print("123456798")
                     print("message_value:", message.value)
                     print("consumer_held_offsets:", consumer.held_offsets)
@@ -70,8 +74,7 @@ class KafkaReaderThread(object):
 
 
 if __name__ == '__main__':
-    # 获取毫秒时间戳
-    t = time.time()
+    FILE_PATH = '/home/anson/python/code/python-utils-class/py_kafk/tencent_waf' 
     hosts = "192.168.199.132:9092"
     broker_version = '2.3.0'
     topic = "test1"
