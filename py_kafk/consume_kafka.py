@@ -50,7 +50,7 @@ class KafkaReaderThread(object):
                     # auto_commit_enable=True,
                     # auto_commit_interval_ms=1
                     # reset_offset_on_start=False,
-                    # auto_offset_reset=pykafka.common.OffsetType.LATEST,
+                    auto_offset_reset=pykafka.common.OffsetType.LATEST,
                 )
                 # print topic.partitions
                 consumer.start()
