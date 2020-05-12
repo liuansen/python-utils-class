@@ -57,8 +57,8 @@ class KafkaReaderThread(object):
                 # _offset = consumer.held_offsets()
                 for message in consumer:
                     # test modle
-                    file_tsName = str(int(time.mktime(time.strptime(datetime.datetime.now().strftime('%Y-%m-%d %H'), '%Y-%m-%d %H')))*1000)
-                    file_paths = FILE_PATH + '/' + 'tencent_waf' + file_tsName + '.dat'
+                    file_tsName = str(int(time.mktime(time.strptime(datetime.datetime.now().strftime('%Y-%m-%d %H:%M'), '%Y-%m-%d %H:%M')))*1000)
+                    file_paths = FILE_PATH + '/' + 'tencent_waf_' + file_tsName + '.dat'
                     with open(file_paths,'a') as f:
                         f.write(message.value + '\n')
                     print("123456798")
