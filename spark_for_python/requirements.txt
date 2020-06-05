@@ -1,2 +1,2 @@
 pyspark==2.3.3
-Django==1.11.14
+Django==1.11.29
