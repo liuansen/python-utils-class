@@ -5,7 +5,7 @@
 from __future__ import unicode_literals
 
 from kafka import KafkaProducer
-from conf import SSL_SERVER_IP, TOPIC, SSL_CERTIFICATE, SSL_CAFILE, API_VERSION
+from conf.settings import SSL_SERVER_IP, TOPIC, SSL_CERTIFICATE, SSL_CAFILE, API_VERSION
 
 
 class KafkaSSProducerModule(object):

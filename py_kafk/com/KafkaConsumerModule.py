@@ -6,7 +6,7 @@ from __future__ import unicode_literals
 
 from kafka import KafkaConsumer
 
-from conf import SERVER_IP, TOPIC, AUTO_OFFSET_RESET, CONSUMER_GROUP, API_VERSION
+from conf.settings import SERVER_IP, TOPIC, AUTO_OFFSET_RESET, CONSUMER_GROUP, API_VERSION
 
 
 class KafkaConsumerModule(object):
@@ -29,8 +29,11 @@ class KafkaConsumerModule(object):
 
     def print_message(self):
         messages = self.consumer
+        count = 0
         for message in messages:
+            print('消费数据第{0}条'.format(count))
             print(message.value)
+            count += 1
 
 
 def main():

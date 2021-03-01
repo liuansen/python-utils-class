@@ -9,7 +9,7 @@ import json
 from kafka import KafkaProducer
 from kafka.errors import KafkaError
 
-from conf import SERVER_IP, TOPIC
+from conf.settings import SERVER_IP, TOPIC
 
 
 class KafkaProducerModule(object):
@@ -19,15 +19,14 @@ class KafkaProducerModule(object):
         self.kafkaTopic = kafkaTopic
         self.producer = KafkaProducer(bootstrap_servers=self.bootstrapServers)
 
-    def sendjsondata(self, params):
+    def sendjsondata(self, params, count):
         try:
             parmas_message = json.dumps(params)
             producer = self.producer
             future = producer.send(self.kafkaTopic, parmas_message.encode('utf-8'))
             producer.flush()
             recordMetadata = future.get(timeout=10)
-            print(params)
-            print(recordMetadata, datetime.datetime.now().strftime('%Y%m%d%H%M%S'))
+            print('发生数据第{0}条'.format(count), params)
         except KafkaError as e:
             print(e)
 
@@ -41,9 +40,11 @@ def main():
     print('-' * 20)
 
     producer = KafkaProducerModule(bootstrapServers, topicStr)
+    count = 0
     for id in range(10):
         params = '{test data}:{no encryption data}---' + str(id)
-        producer.sendjsondata(params)
+        producer.sendjsondata(params, count)
+        count += 1
 
 
 if __name__ == '__main__':

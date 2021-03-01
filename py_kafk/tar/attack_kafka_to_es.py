@@ -5,6 +5,8 @@ import sys
 import json
 import copy
 import time
+from imp import reload
+
 import pykafka
 import datetime
 import traceback
@@ -12,8 +14,6 @@ import threading
 
 from threading import Timer
 from elasticsearch import helpers
-test1tes
-test1tessfsd
 from elasticsearch import Elasticsearch
 
 reload(sys)
@@ -75,7 +75,7 @@ class Kafka2ES(object):
             try:
                 lock.acquire()
                 self.data.append(self._decode(msg.value))
-            except Exception, e:
+            except Exception as e:
                 traceback.print_exc()
             finally:
                 lock.release()
@@ -90,7 +90,7 @@ class Kafka2ES(object):
                     action["_source"][k] = v
 
                 actions.append(action)
-            except Exception, e:
+            except Exception as e:
                 traceback.print_exc()
 
         return actions
@@ -105,7 +105,7 @@ class Kafka2ES(object):
             actions = self.bulk_data(_data)
             if actions:
                 helpers.bulk(self.es, actions)
-        except Exception, e:
+        except Exception as e:
             traceback.print_exc()
         finally:
             send_timer = Timer(30, self._output)
