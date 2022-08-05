@@ -16,7 +16,7 @@ send_to_user = itchat.search_friends(name=SEND_NAME)[0]['UserName']
 
 @itchat.msg_register(itchat.content.TEXT)
 def send_message(msg):
-    print msg.user
+    print(msg.user)
     wxid = msg.user['UserName']
     nickname = msg.user['NickName']
     remark_name = msg.user['RemarkName']
